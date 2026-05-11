@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>for you</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    width:100%;
+    height:100vh;
+    overflow:hidden;
+    background:#0d0f14;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:'Pretendard', sans-serif;
+}
+
+.container{
+    width:100%;
+    max-width:430px;
+    padding:30px;
+    text-align:center;
+}
+
+.typing{
+    font-size:1.45rem;
+    line-height:2.3rem;
+    min-height:150px;
+    white-space:pre-line;
+}
+
+.buttons{
+    display:none;
+    justify-content:center;
+    gap:14px;
+    margin-top:35px;
+}
+
+button{
+    border:none;
+    border-radius:999px;
+    padding:14px 26px;
+    font-size:1rem;
+    cursor:pointer;
+    transition:0.2s ease;
+}
+
+#yesBtn{
+    background:white;
+    color:black;
+    font-weight:600;
+}
+
+#yesBtn:active{
+    transform:scale(0.96);
+}
+
+#noBtn{
+    background:#232530;
+    color:white;
+    position:relative;
+}
+
+.form-area{
+    display:none;
+    margin-top:30px;
+    animation:fade 0.5s ease;
+}
+
+input{
+    width:100%;
+    padding:17px;
+    border:none;
+    border-radius:18px;
+    outline:none;
+    font-size:1rem;
+    margin-bottom:14px;
+}
+
+#submitBtn{
+    width:100%;
+    background:white;
+    color:black;
+    font-weight:700;
+}
+
+.success{
+    margin-top:20px;
+    opacity:0;
+    transform:translateY(10px);
+    transition:0.5s;
+    font-size:1rem;
+}
+
+@keyframes fade{
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="typing" id="typing"></div>
+
+<div class="buttons" id="buttons">
+    <button id="yesBtn">알려주기</button>
+    <button id="noBtn">몰라요</button>
+</div>
+
+<div class="form-area" id="formArea">
+
+<form
+action="https://api.web3forms.com/submit"
+method="POST"
+id="nameForm"
+>
+
+<!-- 여기 Access Key 넣기 -->
+<input
+type="hidden"
+name="access_key"
+value="c32573c4-89a7-458a-9e13-d752913efffc"
+/>
+
+<input
+type="hidden"
+name="subject"
+value="형아 이름 도착 💌"
+/>
+
+<input
+type="hidden"
+name="from_name"
+value="Cute Name Site"
+/>
+
+<input
+type="text"
+name="lover_name"
+placeholder="형아 이름 입력하기..."
+required
+/>
+
+<button type="submit" id="submitBtn">
+보내기
+</button>
+
+</form>
+
+<div class="success" id="success">
+성공적으로 전달 완료💌
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+const text = `
+자기야...
+
+진짜 딱 한 번만 물어볼게요
+
+형아 이름
+살짝만 알려주면 안 돼...? 🤍
+`;
+
+const typing = document.getElementById("typing");
+const buttons = document.getElementById("buttons");
+
+let i = 0;
+
+function typeEffect(){
+
+    if(i < text.length){
+
+        typing.innerHTML += text.charAt(i);
+
+        i++;
+
+        setTimeout(typeEffect, 55);
+
+    }else{
+
+        buttons.style.display = "flex";
+    }
+}
+
+typeEffect();
+
+const noBtn = document.getElementById("noBtn");
+
+noBtn.addEventListener("click", () => {
+
+    const x = Math.random() * 220 - 110;
+    const y = Math.random() * 120 - 60;
+
+    noBtn.style.transform =
+    `translate(${x}px, ${y}px)`;
+});
+
+document
+.getElementById("yesBtn")
+.addEventListener("click", () => {
+
+    document
+    .getElementById("formArea")
+    .style.display = "block";
+});
+
+document
+.getElementById("nameForm")
+.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const form = e.target;
+
+    const data = new FormData(form);
+
+    const response = await fetch(
+        "https://api.web3forms.com/submit",
+        {
+            method:"POST",
+            body:data
+        }
+    );
+
+    if(response.ok){
+
+        const success =
+        document.getElementById("success");
+
+        success.style.opacity = "1";
+        success.style.transform = "translateY(0px)";
+
+        form.reset();
+
+    }else{
+
+        alert("전송 실패 🥺");
+    }
+
+});
+
+</script>
+
+</body>
+</html>
